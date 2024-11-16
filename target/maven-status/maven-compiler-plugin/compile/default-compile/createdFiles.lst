@@ -1,2 +1,4 @@
 com/ofxr/OFXReader.class
+com/ofxr/dtos/TransactionDto.class
+com/ofxr/dtos/AccountStatementDto.class
 com/ofxr/OFXProcess.class

@@ -1,26 +1,33 @@
 package com.ofxr;
 
+import com.ofxr.dtos.AccountStatementDto;
+import com.ofxr.dtos.TransactionDto;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
+
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
-import java.io.File;
-import java.nio.file.Files;
-import java.nio.file.Paths;
+import java.io.InputStream;
+import java.nio.charset.StandardCharsets;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import java.util.ArrayList;
+import java.util.List;
+
 
 public class OFXProcess {
 
     private static final Logger logger = Logger.getLogger(OFXProcess.class.getName());
 
-    public void processOFX(File file) {
-        try {
+    public AccountStatementDto processOFX(InputStream inputStream) throws Exception {
+        // Lê o conteúdo do InputStream para uma String
+        String content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
 
-            String content = new String(Files.readAllBytes(file));
+        try {
 
             // Remove linhas de cabeçalho antes da tag <OFX>
             int startIndex = content.indexOf("<OFX>");
@@ -31,13 +38,24 @@ public class OFXProcess {
             }
 
             // Converter a string de conteúdo para um InputStream
-            ByteArrayInputStream inputStream = new ByteArrayInputStream(content.getBytes());
+            ByteArrayInputStream newInputStream = new ByteArrayInputStream(content.getBytes());
 
             DocumentBuilderFactory factory = DocumentBuilderFactory.newInstance();
             DocumentBuilder builder = factory.newDocumentBuilder();
 
-            Document document = builder.parse(file);
+            Document document = builder.parse(newInputStream);
             document.getDocumentElement().normalize();
+
+            String organization = getTagValueFromNodeList(document.getElementsByTagName("ORG"));
+            String currency = getTagValueFromNodeList(document.getElementsByTagName("CURDEF"));
+            String bankId = getTagValueFromNodeList(document.getElementsByTagName("BANKID"));
+            String branchId = getTagValueFromNodeList(document.getElementsByTagName("BRANCHID"));
+            String accountId = getTagValueFromNodeList(document.getElementsByTagName("ACCTID"));
+            String accountType = getTagValueFromNodeList(document.getElementsByTagName("ACCTTYPE"));
+            String dateStart = getTagValueFromNodeList(document.getElementsByTagName("DTSTART"));
+            String dateEnd = getTagValueFromNodeList(document.getElementsByTagName("DTEND"));
+
+            List<TransactionDto> transactionsList = new ArrayList<>();
 
             NodeList transactions = document.getElementsByTagName("STMTTRN");
             for (int i = 0; i < transactions.getLength(); i++) {
@@ -45,15 +63,28 @@ public class OFXProcess {
 
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
-                    System.out.println("Transaction ID: " + getTagValue("FITID", element));
-                    System.out.println("Amount: " + getTagValue("TRNAMT", element));
-                    System.out.println("Date: " + getTagValue("DTPOSTED", element));
+                    String transactionId = getTagValue("FITID", element);
+                    String amount = getTagValue("TRNAMT", element);
+                    String date = getTagValue("DTPOSTED", element);
+
+                    transactionsList.add(new TransactionDto(transactionId, amount, date));
                 }
             }
 
+            return new AccountStatementDto(
+                    organization, currency, bankId, branchId, accountId, accountType, dateStart, dateEnd, transactionsList
+            );
+
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Error: File can`t be processed!", e);
+            return new AccountStatementDto();
         }
+    }
+
+    private String getTagValueFromNodeList(NodeList nodeList) {
+        return (nodeList.getLength() > 0 && nodeList.item(0).getFirstChild() != null)
+                ? nodeList.item(0).getFirstChild().getNodeValue()
+                : null;
     }
 
     private String getTagValue(String tag, Element element) {
