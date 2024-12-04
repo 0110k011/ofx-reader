@@ -69,10 +69,12 @@ public class OFXProcess {
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
                     String transactionId = getTagValue("FITID", element);
+                    String description = getTagValue("MEMO", element);
+                    String transactionType = getTagValue("TRNTYPE", element);
                     BigDecimal amount = new BigDecimal(Objects.requireNonNull(getTagValue("TRNAMT", element)));
                     LocalDateTime date = getLocalDateTime(Objects.requireNonNull(getTagValue("DTPOSTED", element)));
 
-                    transactionsList.add(new TransactionDto(transactionId, amount, date));
+                    transactionsList.add(new TransactionDto(transactionId, amount, date, description, transactionType));
                 }
             }
 
