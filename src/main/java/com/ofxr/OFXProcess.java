@@ -11,7 +11,11 @@ import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
 import java.io.ByteArrayInputStream;
 import java.io.InputStream;
+import java.math.BigDecimal;
 import java.nio.charset.StandardCharsets;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
+import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -28,6 +32,7 @@ public class OFXProcess {
         String content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
 
         try {
+
 
             // Remove linhas de cabeçalho antes da tag <OFX>
             int startIndex = content.indexOf("<OFX>");
@@ -52,8 +57,8 @@ public class OFXProcess {
             String branchId = getTagValueFromNodeList(document.getElementsByTagName("BRANCHID"));
             String accountId = getTagValueFromNodeList(document.getElementsByTagName("ACCTID"));
             String accountType = getTagValueFromNodeList(document.getElementsByTagName("ACCTTYPE"));
-            String dateStart = getTagValueFromNodeList(document.getElementsByTagName("DTSTART"));
-            String dateEnd = getTagValueFromNodeList(document.getElementsByTagName("DTEND"));
+            LocalDateTime dateStart = getLocalDateTime(Objects.requireNonNull(getTagValueFromNodeList(document.getElementsByTagName("DTSTART"))));
+            LocalDateTime dateEnd = getLocalDateTime(Objects.requireNonNull(getTagValueFromNodeList(document.getElementsByTagName("DTEND"))));
 
             List<TransactionDto> transactionsList = new ArrayList<>();
 
@@ -64,8 +69,8 @@ public class OFXProcess {
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
                     String transactionId = getTagValue("FITID", element);
-                    String amount = getTagValue("TRNAMT", element);
-                    String date = getTagValue("DTPOSTED", element);
+                    BigDecimal amount = new BigDecimal(Objects.requireNonNull(getTagValue("TRNAMT", element)));
+                    LocalDateTime date = getLocalDateTime(Objects.requireNonNull(getTagValue("DTPOSTED", element)));
 
                     transactionsList.add(new TransactionDto(transactionId, amount, date));
                 }
@@ -93,5 +98,11 @@ public class OFXProcess {
             return nodeList.item(0).getChildNodes().item(0).getNodeValue();
         }
         return null;
+    }
+
+    private LocalDateTime getLocalDateTime(String stringDate) {
+        String cleanedInput = stringDate.split("\\[")[0];
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
+        return LocalDateTime.parse(cleanedInput, formatter);
     }
 }

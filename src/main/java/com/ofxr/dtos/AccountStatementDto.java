@@ -1,5 +1,6 @@
 package com.ofxr.dtos;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 public class AccountStatementDto {
@@ -10,12 +11,12 @@ public class AccountStatementDto {
     private String branchId;
     private String accountId;
     private String accountType;
-    private String dateStart;
-    private String dateEnd;
+    private LocalDateTime dateStart;
+    private LocalDateTime dateEnd;
     private List<TransactionDto> transactions;
 
     public AccountStatementDto(String organization, String currency, String bankId, String branchId,
-                               String accountId, String accountType, String dateStart, String dateEnd,
+                               String accountId, String accountType, LocalDateTime dateStart, LocalDateTime dateEnd,
                                List<TransactionDto> transactions) {
         this.organization = organization;
         this.currency = currency;
@@ -79,19 +80,19 @@ public class AccountStatementDto {
         this.accountType = accountType;
     }
 
-    public String getDateStart() {
+    public LocalDateTime getDateStart() {
         return dateStart;
     }
 
-    public void setDateStart(String dateStart) {
+    public void setDateStart(LocalDateTime dateStart) {
         this.dateStart = dateStart;
     }
 
-    public String getDateEnd() {
+    public LocalDateTime getDateEnd() {
         return dateEnd;
     }
 
-    public void setDateEnd(String dateEnd) {
+    public void setDateEnd(LocalDateTime dateEnd) {
         this.dateEnd = dateEnd;
     }
 

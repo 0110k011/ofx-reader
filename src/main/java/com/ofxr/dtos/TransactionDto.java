@@ -1,12 +1,15 @@
 package com.ofxr.dtos;
 
+import java.math.BigDecimal;
+import java.time.LocalDateTime;
+
 public class TransactionDto {
     private String transactionId;
-    private String amount;
-    private String date;
+    private BigDecimal amount;
+    private LocalDateTime date;
 
     // Construtor
-    public TransactionDto(String transactionId, String amount, String date) {
+    public TransactionDto(String transactionId, BigDecimal amount, LocalDateTime date) {
         this.transactionId = transactionId;
         this.amount = amount;
         this.date = date;
@@ -21,19 +24,19 @@ public class TransactionDto {
         this.transactionId = transactionId;
     }
 
-    public String getAmount() {
+    public BigDecimal getAmount() {
         return amount;
     }
 
-    public void setAmount(String amount) {
+    public void setAmount(BigDecimal amount) {
         this.amount = amount;
     }
 
-    public String getDate() {
+    public LocalDateTime getDate() {
         return date;
     }
 
-    public void setDate(String date) {
+    public void setDate(LocalDateTime date) {
         this.date = date;
     }
 }
