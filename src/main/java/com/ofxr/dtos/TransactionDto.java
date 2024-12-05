@@ -15,6 +15,8 @@ public class TransactionDto {
         this.transactionCode = transactionCode;
         this.amount = amount;
         this.date = date;
+        this.description = description;
+        this.transactionType = transactionType;
     }
 
     public String getTransactionCode() {
