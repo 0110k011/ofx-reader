@@ -53,9 +53,9 @@ public class OFXProcess {
 
             String organization = getTagValueFromNodeList(document.getElementsByTagName("ORG"));
             String currency = getTagValueFromNodeList(document.getElementsByTagName("CURDEF"));
-            String bankId = getTagValueFromNodeList(document.getElementsByTagName("BANKID"));
-            String branchId = getTagValueFromNodeList(document.getElementsByTagName("BRANCHID"));
-            String accountId = getTagValueFromNodeList(document.getElementsByTagName("ACCTID"));
+            String bankCode = getTagValueFromNodeList(document.getElementsByTagName("BANKID"));
+            String branchCode = getTagValueFromNodeList(document.getElementsByTagName("BRANCHID"));
+            String accountCode = getTagValueFromNodeList(document.getElementsByTagName("ACCTID"));
             String accountType = getTagValueFromNodeList(document.getElementsByTagName("ACCTTYPE"));
             LocalDateTime dateStart = getLocalDateTime(Objects.requireNonNull(getTagValueFromNodeList(document.getElementsByTagName("DTSTART"))));
             LocalDateTime dateEnd = getLocalDateTime(Objects.requireNonNull(getTagValueFromNodeList(document.getElementsByTagName("DTEND"))));
@@ -68,18 +68,18 @@ public class OFXProcess {
 
                 if (node.getNodeType() == Node.ELEMENT_NODE) {
                     Element element = (Element) node;
-                    String transactionId = getTagValue("FITID", element);
+                    String transactionCode = getTagValue("FITID", element);
                     String description = getTagValue("MEMO", element);
                     String transactionType = getTagValue("TRNTYPE", element);
                     BigDecimal amount = new BigDecimal(Objects.requireNonNull(getTagValue("TRNAMT", element)));
                     LocalDateTime date = getLocalDateTime(Objects.requireNonNull(getTagValue("DTPOSTED", element)));
 
-                    transactionsList.add(new TransactionDto(transactionId, amount, date, description, transactionType));
+                    transactionsList.add(new TransactionDto(transactionCode, amount, date, description, transactionType));
                 }
             }
 
             return new AccountStatementDto(
-                    organization, currency, bankId, branchId, accountId, accountType, dateStart, dateEnd, transactionsList
+                    organization, currency, bankCode, branchCode, accountCode, accountType, dateStart, dateEnd, transactionsList
             );
 
         } catch (Exception e) {

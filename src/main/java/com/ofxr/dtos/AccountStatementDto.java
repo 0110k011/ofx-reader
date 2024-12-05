@@ -7,22 +7,22 @@ public class AccountStatementDto {
 
     private String organization;
     private String currency;
-    private String bankId;
-    private String branchId;
-    private String accountId;
+    private String bankCode;
+    private String branchCode;
+    private String accountCode;
     private String accountType;
     private LocalDateTime dateStart;
     private LocalDateTime dateEnd;
     private List<TransactionDto> transactions;
 
-    public AccountStatementDto(String organization, String currency, String bankId, String branchId,
-                               String accountId, String accountType, LocalDateTime dateStart, LocalDateTime dateEnd,
+    public AccountStatementDto(String organization, String currency, String bankCode, String branchCode,
+                               String accountCode, String accountType, LocalDateTime dateStart, LocalDateTime dateEnd,
                                List<TransactionDto> transactions) {
         this.organization = organization;
         this.currency = currency;
-        this.bankId = bankId;
-        this.branchId = branchId;
-        this.accountId = accountId;
+        this.bankCode = bankCode;
+        this.branchCode = branchCode;
+        this.accountCode = accountCode;
         this.accountType = accountType;
         this.dateStart = dateStart;
         this.dateEnd = dateEnd;
@@ -48,28 +48,28 @@ public class AccountStatementDto {
         this.currency = currency;
     }
 
-    public String getBankId() {
-        return bankId;
+    public String getBankCode() {
+        return bankCode;
     }
 
-    public void setBankId(String bankId) {
-        this.bankId = bankId;
+    public void setBankCode(String bankCode) {
+        this.bankCode = bankCode;
     }
 
-    public String getBranchId() {
-        return branchId;
+    public String getBranchCode() {
+        return branchCode;
     }
 
-    public void setBranchId(String branchId) {
-        this.branchId = branchId;
+    public void setBranchId(String branchCode) {
+        this.branchCode = branchCode;
     }
 
-    public String getAccountId() {
-        return accountId;
+    public String getAccountCode() {
+        return accountCode;
     }
 
-    public void setAccountId(String accountId) {
-        this.accountId = accountId;
+    public void setAccountCode(String accountCode) {
+        this.accountCode = accountCode;
     }
 
     public String getAccountType() {

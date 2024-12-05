@@ -4,25 +4,25 @@ import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
 public class TransactionDto {
-    private String transactionId;
+    private String transactionCode;
     private BigDecimal amount;
     private LocalDateTime date;
     private String description;
     private String transactionType;
 
     // Construtor
-    public TransactionDto(String transactionId, BigDecimal amount, LocalDateTime date, String description, String transactionType) {
-        this.transactionId = transactionId;
+    public TransactionDto(String transactionCode, BigDecimal amount, LocalDateTime date, String description, String transactionType) {
+        this.transactionCode = transactionCode;
         this.amount = amount;
         this.date = date;
     }
 
-    public String getTransactionId() {
-        return transactionId;
+    public String getTransactionCode() {
+        return transactionCode;
     }
 
-    public void setTransactionId(String transactionId) {
-        this.transactionId = transactionId;
+    public void setTransactionId(String transactionCode) {
+        this.transactionCode = transactionCode;
     }
 
     public BigDecimal getAmount() {
