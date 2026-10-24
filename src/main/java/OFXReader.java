@@ -74,7 +74,7 @@ public class OFXReader {
 
             return new AccountStatement(
                     organization, currency, bankCode, branchCode, accountCode,
-                    accountType, dateStart, dateEnd, transactionsList
+                    accountType, dateStart, dateEnd, transactionsList, transactions.getLength()
             );
 
         } catch (Exception e) {

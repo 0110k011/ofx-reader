@@ -12,5 +12,6 @@ public record AccountStatement(
         String accountType,
         LocalDateTime dateStart,
         LocalDateTime dateEnd,
-        List<Transaction> transactions
+        List<Transaction> transactions,
+        Integer transactionQuantity
 ) {}
