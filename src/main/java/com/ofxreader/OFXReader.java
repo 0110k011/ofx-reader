@@ -78,7 +78,8 @@ public class OFXReader {
                     organization, currency, bankCode, branchCode, accountCode,
                     accountType, dateStart, dateEnd, transactionsList, transactions.getLength()
             );
-
+        } catch (IllegalArgumentException e) {
+            throw e;
         } catch (Exception e) {
             logger.log(Level.SEVERE, "Erro ao processar o arquivo OFX", e);
             throw new RuntimeException("Falha ao processar o arquivo OFX", e);
