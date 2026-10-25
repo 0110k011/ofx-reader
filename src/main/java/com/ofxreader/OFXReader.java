@@ -1,5 +1,7 @@
-import dto.AccountStatement;
-import dto.Transaction;
+package com.ofxreader;
+
+import com.ofxreader.dto.AccountStatement;
+import com.ofxreader.dto.Transaction;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;

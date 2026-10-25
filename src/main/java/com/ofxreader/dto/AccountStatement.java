@@ -1,4 +1,4 @@
-package dto;
+package com.ofxreader.dto;
 
 import java.time.LocalDateTime;
 import java.util.List;
