@@ -87,9 +87,12 @@ public class OFXReader {
                     organization, currency, bankCode, branchCode, accountCode,
                     accountType, dateStart, dateEnd, transactionsList, transactions.getLength()
             );
+        } catch (OFXException e) {
+            logger.log(Level.WARNING, "Failed to process the OFX file", e);
+            throw new OFXException(e.getMessage(), e, e.getStatus());
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Failed to process the OFX file", e);
-            throw new OFXException(e.getMessage(), e, 500);
+            logger.log(Level.SEVERE, "Internal server error", e);
+            throw new OFXException("Internal server error:", e, 500);
         }
     }
 
