@@ -2,6 +2,7 @@ package com.ofxreader;
 
 import com.ofxreader.dto.AccountStatement;
 import com.ofxreader.dto.Transaction;
+import com.ofxreader.exception.OFXException;
 import org.w3c.dom.Document;
 import org.w3c.dom.Element;
 import org.w3c.dom.Node;
@@ -32,7 +33,7 @@ public class OFXReader {
 
             int startIndex = content.indexOf("<OFX>");
             if (startIndex == -1) {
-                throw new IllegalArgumentException("Tag <OFX> não encontrada no arquivo.");
+                throw new OFXException("Tag <OFX> not found in the file", 404);
             }
             content = content.substring(startIndex);
 
@@ -53,8 +54,16 @@ public class OFXReader {
             String accountCode = getTagValueFromNodeList(document.getElementsByTagName("ACCTID"));
             String accountType = getTagValueFromNodeList(document.getElementsByTagName("ACCTTYPE"));
 
-            LocalDateTime dateStart = getLocalDateTime(Objects.requireNonNull(getTagValueFromNodeList(document.getElementsByTagName("DTSTART")), "DTSTART não pode ser nulo"));
-            LocalDateTime dateEnd = getLocalDateTime(Objects.requireNonNull(getTagValueFromNodeList(document.getElementsByTagName("DTEND")), "DTEND não pode ser nulo"));
+            String dateStartStr = getTagValueFromNodeList(document.getElementsByTagName("DTSTART"));
+            if (dateStartStr == null) {
+                throw new OFXException("DTSTART cannot be null", 400);
+            }
+            LocalDateTime dateStart = getLocalDateTime(dateStartStr);
+            String dateEndStr = getTagValueFromNodeList(document.getElementsByTagName("DTEND"));
+            if (dateEndStr == null) {
+                throw new OFXException("DTEND cannot be null", 400);
+            }
+            LocalDateTime dateEnd = getLocalDateTime(dateEndStr);
 
             List<Transaction> transactionsList = new ArrayList<>();
             NodeList transactions = document.getElementsByTagName("STMTTRN");
@@ -78,11 +87,9 @@ public class OFXReader {
                     organization, currency, bankCode, branchCode, accountCode,
                     accountType, dateStart, dateEnd, transactionsList, transactions.getLength()
             );
-        } catch (IllegalArgumentException e) {
-            throw e;
         } catch (Exception e) {
-            logger.log(Level.SEVERE, "Erro ao processar o arquivo OFX", e);
-            throw new RuntimeException("Falha ao processar o arquivo OFX", e);
+            logger.log(Level.SEVERE, "Failed to process the OFX file", e);
+            throw new OFXException(e.getMessage(), e, 500);
         }
     }
 
