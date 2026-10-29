@@ -13,4 +13,8 @@ public class OFXException extends RuntimeException {
         super(cause.getMessage(), cause);
         this.status = status;
     }
+
+    public int getStatus() {
+        return status;
+    }
 }
