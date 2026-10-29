@@ -27,9 +27,9 @@ public class OFXReader {
     private static final Logger logger = Logger.getLogger(OFXReader.class.getName());
     private static final DateTimeFormatter OFX_DATE_FORMATTER = DateTimeFormatter.ofPattern("yyyyMMddHHmmss");
 
-    public AccountStatement processOFX(InputStream inputStream) {
+    public AccountStatement processOFX(byte[] fileBytes) {
         try {
-            String content = new String(inputStream.readAllBytes(), StandardCharsets.UTF_8);
+            String content = new String(fileBytes, StandardCharsets.UTF_8);
 
             int startIndex = content.indexOf("<OFX>");
             if (startIndex == -1) {
