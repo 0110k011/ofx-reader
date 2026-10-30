@@ -33,7 +33,7 @@ public class OFXReader {
 
             int startIndex = content.indexOf("<OFX>");
             if (startIndex == -1) {
-                throw new OFXException("Tag <OFX> not found in the file", 404);
+                throw new OFXException("Tag <OFX> not found in the file", 400);
             }
             content = content.substring(startIndex);
 
